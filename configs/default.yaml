@@ -1,0 +1,53 @@
+# Default configuration for REGATE experiments
+# Corresponds to hyperparameters in Table A.1 of the paper
+
+# === Dataset ===
+dataset: "elliptic"  # elliptic | btc_alpha | btc_otc
+data_dir: null  # auto-resolved if null
+
+# === Backbone ===
+backbone: "tgn"  # tgn | tgat | graphmixer | dygformer | ctan | generaldyg
+hidden_dim: 64
+time_dim: 64
+num_layers: 2
+dropout: 0.1
+
+# === REGATE ===
+use_regate: true
+token_dim: 64
+alpha_max: 0.1       # Table A.1: varies per model/dataset
+gamma: 0.1           # temporal decay
+w_att: 14.0          # attention window (days/steps)
+stable_init: true    # initialize gate logit g << 0
+
+# === Loss weights ===
+lambda_delta: 0.01   # intervention penalty
+lambda_retr: 0.1     # retrieval distillation
+lambda_ent: 0.01     # routing entropy
+lambda_mask: 0.0     # noisy entity prior (optional)
+
+# === Training ===
+lr_model: 1e-4       # backbone learning rate
+lr_gate: 1e-2        # gate/REGATE learning rate
+weight_decay: 1e-5
+batch_size: 200
+num_epochs: 50
+patience: 10
+
+# === Retrieval ===
+doc_dim: 768         # frozen text encoder dimension
+bin_feat_dim: 16
+top_k_ret: 10
+tau_sel: 1.0
+w_ret: 14.0          # retrieval lookback window
+
+# === Exogenous docs ===
+exo_source: "synthetic"  # synthetic | preextracted | llm
+exo_json_path: null      # path to pre-extracted JSON
+num_synthetic_docs: 50
+
+# === Evaluation ===
+num_seeds: 5
+eval_windows:
+  elliptic_before: [40, 42]
+  elliptic_after: [43, 47]
